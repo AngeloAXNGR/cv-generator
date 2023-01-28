@@ -1,25 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
+import {useRef} from 'react';
 import './App.css';
+import Form from './components/forms/Form';
+import Preview from './components/preview/Preview';
+import { FormDataContextProvider } from './contexts/FormContext';
+import {useReactToPrint} from 'react-to-print';
+
 
 function App() {
+  const previewRef = useRef<any>();
+  const handlePrint = useReactToPrint({
+    content: () => previewRef.current,
+    documentTitle: "CV File",
+  })
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <FormDataContextProvider>
+      <div className="App">
+        <header>
+          <h1>CV Generator</h1>
+        </header>
+        <div className="main-content">
+          <Form
+            handlePrint={handlePrint}
+          />
+          <Preview
+            ref={previewRef}
+          />
+        </div>
+      </div>
+    </FormDataContextProvider>
   );
 }
 
